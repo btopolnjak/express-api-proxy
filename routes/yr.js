@@ -1,14 +1,14 @@
-const express = require('express');
+import express from 'express';
+import needle from 'needle';
+import apicache from 'apicache';
+import url from 'url';
 const router = express.Router();
-const needle = require('needle');
-const apicache = require('apicache');
-const url = require('url');
 
 const YR_URL = process.env.YR_URL;
 
 let cache = apicache.middleware
 
-router.get('/', cache('5 minutes'), async (req, res) => {
+export default router.get('/', cache('5 minutes'), async (req, res) => {
     
     try {
 
@@ -23,5 +23,3 @@ router.get('/', cache('5 minutes'), async (req, res) => {
         res.status(500).json({error});
     }
 })
-
-module.exports = router;

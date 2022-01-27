@@ -1,7 +1,10 @@
-require('dotenv').config();
-const express = require('express');
-const cors = require('cors');
-const rateLimit = require('express-rate-limit');
+import 'dotenv/config';
+import express from 'express';
+import cors from 'cors';
+import rateLimit from 'express-rate-limit';
+
+import hnb from './routes/hnb.js';
+import yr from './routes/yr.js';
 
 const PORT = 5000;
 
@@ -15,12 +18,13 @@ const limiter = rateLimit({
 app.use(limiter);
 app.set('trust proxy', 1);
 
-// Route definitions
-app.use('/hnb', require('./routes/hnb'));
-app.use('/yr', require('./routes/yr'));
-
 // Use CORS
 app.use(cors());
+
+// Route definitions
+app.use('/hnb', hnb);
+app.use('/yr', yr);
+
 
 app.listen(PORT, () => {
     console.log(`Server running on port ${PORT}`);

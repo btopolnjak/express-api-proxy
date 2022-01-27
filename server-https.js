@@ -1,11 +1,15 @@
-require('dotenv').config();
-const express = require('express');
-const https = require('https');
-const cors = require('cors');
-const fs = require('fs');
+import 'dotenv/config';
+import express from 'express';
+import cors from 'cors';
+import rateLimit from 'express-rate-limit';
+import https from 'https';
+import fs from 'fs';
 const privateKey = fs.readFileSync(process.env.PRIVKEY);
 const certificate = fs.readFileSync(process.env.FULLCHAIN);
-const rateLimit = require('express-rate-limit');
+
+// Routes import
+import hnb from './routes/hnb.js';
+import yr from './routes/yr.js';
 
 // Use port from .env file or 443 (HTTPS)
 const PORT = process.env.PORT || 443;
@@ -20,12 +24,13 @@ const limiter = rateLimit({
 app.use(limiter);
 app.set('trust proxy', 1);
 
-// Route definitions
-app.use('/hnb', require('./routes/hnb'));
-app.use('/yr', require('./routes/yr'));
-
 // Use CORS
 app.use(cors());
+
+// Route definitions
+app.use('/hnb', hnb);
+app.use('/yr', yr);
+
 
 https.createServer({
     key: privateKey,
